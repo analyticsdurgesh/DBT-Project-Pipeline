@@ -1,0 +1,61 @@
+# This file documents dbt models and defines data tests.
+# dbt tests help confirm that important columns are not blank,
+# have expected values, or stay unique.
+
+version: 2
+
+models:
+  # Cleaned view built from the raw Snowflake table.
+  - name: stg_blinkit_orders
+    description: Cleaned staging view over the raw S3-loaded Blinkit CSV.
+    columns:
+      - name: item_identifier
+        description: Product/item code from the Blinkit CSV.
+        tests:
+          - not_null
+      - name: outlet_identifier
+        description: Outlet/store code from the Blinkit CSV.
+        tests:
+          - not_null
+      - name: item_fat_content
+        description: Fat-content category, cleaned from the raw CSV value.
+        tests:
+          - accepted_values:
+              arguments:
+                values: ['Low Fat', 'Regular']
+      - name: sales
+        description: Sales amount converted from text into a decimal number.
+        tests:
+          - not_null
+
+  # Detailed final table: one row per source sales record.
+  - name: fct_blinkit_sales
+    description: Transaction-level Blinkit sales fact table.
+    columns:
+      - name: blinkit_sale_key
+        description: dbt-generated unique key for each sales row.
+        tests:
+          - not_null
+          - unique
+      - name: item_identifier
+        description: Product/item code.
+        tests:
+          - not_null
+      - name: outlet_identifier
+        description: Outlet/store code.
+        tests:
+          - not_null
+
+  # Summary final table: one row per outlet and outlet-attribute combination.
+  - name: mart_outlet_sales
+    description: Outlet-level sales and rating summary by outlet attributes.
+    columns:
+      - name: outlet_sales_key
+        description: dbt-generated unique key for each outlet summary row.
+        tests:
+          - not_null
+          - unique
+      - name: outlet_identifier
+        description: Outlet/store code. Some IDs appear with multiple outlet sizes in the source data.
+        tests:
+          - not_null

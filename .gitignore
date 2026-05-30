@@ -1,0 +1,23 @@
+# macOS local folder metadata.
+.DS_Store
+
+# Local secrets. Keep real keys/passwords out of git.
+.env
+.user.yml
+profiles.yml
+config/local_credentials.json
+
+# Local Python virtual environment.
+.venv/
+
+# dbt generated folders and logs.
+logs/
+target/
+dbt_packages/
+*.log
+__pycache__/
+*.pyc
+
+# Legacy local walkthroughs with machine-specific setup notes.
+LINE_BY_LINE_EXPLANATION.md
+PROJECT_DOCUMENTATION.md

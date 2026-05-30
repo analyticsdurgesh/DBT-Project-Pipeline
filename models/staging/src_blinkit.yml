@@ -1,0 +1,23 @@
+# This file declares the raw Snowflake table as a dbt source.
+# A source means: "dbt did not create this table, but dbt can read from it."
+
+version: 2
+
+sources:
+  # Friendly source name used inside dbt SQL:
+  # {{ source('blinkit_raw', 'blinkit_orders_raw') }}
+  - name: blinkit_raw
+
+    # Public-safe project default. Change this in your local copy if you use
+    # a different Snowflake database.
+    database: BLINKIT_DB
+
+    # RAW is created by sql/bootstrap_snowflake.sql.
+    schema: RAW
+    tables:
+      # dbt model name for the raw orders table.
+      - name: blinkit_orders_raw
+
+        # Actual Snowflake table name.
+        identifier: BLINKIT_ORDERS_RAW
+        description: Raw Blinkit order data copied from the S3 CSV file.

@@ -1,0 +1,43 @@
+# This is the main dbt project configuration file.
+# dbt reads this file to understand the project name, where models live,
+# and how each model folder should be built in Snowflake.
+
+# Project name used by dbt internally.
+name: blinkit_dbt_project
+
+# Project version for your own reference.
+version: "1.0.0"
+
+# dbt config file format version. Keep this as 2 for modern dbt projects.
+config-version: 2
+
+# This must match the top-level profile name in profiles.yml.
+# profiles.yml contains the Snowflake connection details.
+profile: blinkit_dbt_project
+
+# These tell dbt where to find project files.
+model-paths: ["models"]
+macro-paths: ["macros"]
+test-paths: ["tests"]
+
+# `dbt clean` deletes these generated folders.
+# They are build outputs, not source code.
+clean-targets:
+  - target
+  - dbt_packages
+  - logs
+
+# Model build rules.
+# The folder name under `models/` controls the default schema and materialization.
+models:
+  blinkit_dbt_project:
+    # Staging models clean raw data. Views are lightweight and always show
+    # the latest raw data without storing a second copy.
+    staging:
+      +materialized: view
+      +schema: staging
+    # Mart models are final analytics tables. Tables are faster to query
+    # because dbt stores the transformed result in Snowflake.
+    marts:
+      +materialized: table
+      +schema: marts

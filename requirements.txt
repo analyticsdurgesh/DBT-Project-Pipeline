@@ -1,0 +1,3 @@
+# dbt adapter for Snowflake.
+# Installing this also installs dbt-core and the Snowflake Python connector.
+dbt-snowflake>=1.9,<2.0
