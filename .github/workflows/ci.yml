@@ -1,0 +1,29 @@
+name: dbt project CI
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
+
+jobs:
+  parse:
+    # dbt parse reads every model, ref(), source and test and fails on any broken
+    # one, without connecting to Snowflake. The example profile's placeholder
+    # values are enough because parse never opens a connection.
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install dbt (Snowflake adapter)
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+      - name: Parse the project
+        run: |
+          cp profiles.yml.example profiles.yml
+          dbt parse --profiles-dir .
+          dbt ls --profiles-dir . --resource-type model --resource-type test
