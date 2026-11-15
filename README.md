@@ -121,11 +121,27 @@ Then edit both local files with your Snowflake and AWS values. These files are i
 
 ## Install
 
+Use Python 3.13 (3.12 and 3.14 also work; 3.15 is too new for dbt). On a Mac with Python from python.org,
+first double-click **Install Certificates.command** in Applications > Python 3.13: dbt downloads part of
+itself while it installs, and without certificates that download fails with `CERTIFICATE_VERIFY_FAILED`.
+
+Mac or Linux (Terminal):
+
 ```bash
 python3 -m venv .venv
 source .venv/bin/activate
 pip install -r requirements.txt
 ```
+
+Windows (PowerShell):
+
+```powershell
+python -m venv .venv
+.venv\Scripts\Activate.ps1
+pip install -r requirements.txt
+```
+
+If PowerShell says *running scripts is disabled*, run `Set-ExecutionPolicy -Scope CurrentUser RemoteSigned` once, then activate again.
 
 ## Run the Full Pipeline
 
